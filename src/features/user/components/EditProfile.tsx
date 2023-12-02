@@ -69,8 +69,7 @@ function EditProfile() {
 
     try {
       const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${
-          import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
+        `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
         }/image/upload`,
         {
           method: "POST",
@@ -80,7 +79,7 @@ function EditProfile() {
       const res = await response.json();
       setUrl(res.public_id);
       setProfileUrl(
-        "http://res.cloudinary.com/dpp5z9hh6/image/upload/v1/" + res.public_id,
+        `https://res.cloudinary.com/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload/v1/` + res.public_id,
       );
       setLoading(false);
     } catch (error) {
