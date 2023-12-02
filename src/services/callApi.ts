@@ -3,7 +3,7 @@ import axios from "axios";
 const callApi = () => {
   const axiosInstance = axios.create({
     // baseURL: "http://localhost:8080/",
-    baseURL: "https://titan-server.onrender.com/",
+    baseURL: "https://titans-0hqs.onrender.com",
   });
 
   // axiosInstance.defaults.headers.Authorization = `Bearer ${localStorage.getItem(
