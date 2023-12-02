@@ -1,8 +1,7 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState, useRef, useEffect } from "react";
 import { FaCamera } from "react-icons/fa";
 import callApi from "../../../services/callApi";
-// import { Image } from "cloudinary-react";
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -13,41 +12,31 @@ export const updateUser = async (data: any) => {
   return response;
 };
 
-const queryClient = new QueryClient();
-
 function EditProfile() {
+  const textRef = useRef<HTMLInputElement>(null);
   const { data, refetch } = useQuery({
     queryKey: ["user"],
     queryFn: () => getUser(),
   });
   const user = data?.data.user;
-  console.log(user);
 
   const [firstName, setFirstName] = useState(user?.firstName);
   const [lastName, setLastName] = useState(user?.lastName);
   const [location, setLocation] = useState(user?.location);
   const [profession, setProfession] = useState(user?.profession);
+  const [profileUrl, setProfileUrl] = useState("");
   //
   const [image, setImage] = useState<any>(null);
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState<any>(null);
-  const [profileUrl, setProfileUrl] = useState("");
   const navigate = useNavigate();
 
   const { mutateAsync } = useMutation({
     mutationFn: updateUser,
-    onSuccess: (data) => {
-      // queryClient.setQueryData(["user"], (oldData: any) => {
-      //   console.log(oldData);
-      //   if (oldData) {
-      //     return { ...data, oldData };
-      //   }
-      //   return oldData;
-      // });
+    onSuccess: () => {
       refetch();
       toast.success("update successfully");
-      // queryClient.invalidateQueries({ queryKey: ["user"] });
       navigate("/");
     },
     onError: (err) => {
@@ -57,13 +46,6 @@ function EditProfile() {
       }
     },
   });
-
-  useEffect(() => {
-    setFirstName(user?.firstName);
-    setLastName(user?.lastName);
-    setProfession(user?.profession);
-    setLocation(user?.location);
-  }, []);
 
   const submitHandler = async (e: FormEvent) => {
     e.preventDefault();
@@ -118,19 +100,24 @@ function EditProfile() {
     };
   };
 
+  useEffect(() => {
+    textRef.current?.focus();
+  }, []);
+
   return (
     <div className="text-center">
       <div className="mx-auto max-w-screen-xl px-4  sm:px-6 lg:px-8">
         <div className="mx-auto max-w-lg">
           <form
             onSubmit={submitHandler}
-            className="mb-0  space-y-4 rounded-lg bg-gray-100 p-4  shadow-sm sm:p-6 lg:p-8"
+            className="mb-0  space-y-4 rounded-lg bg-gray-100 p-4 shadow-sm  dark:bg-secondary-900 sm:p-6 lg:p-8"
           >
-            <h1 className="mb-6 text-center text-2xl font-bold text-secondary-700 ">
+            <h1 className="mb-6 text-center text-2xl font-bold text-secondary-700 dark:text-secondary-400  ">
               Edit Your Profile
             </h1>
             <div>
               <input
+                ref={textRef}
                 onChange={(e) => setFirstName(e.target.value)}
                 value={firstName}
                 type="text"
@@ -200,31 +187,11 @@ function EditProfile() {
             )}
             {loading && (
               <div className="flex items-center justify-center gap-2">
-                <div className="h-6 w-6 animate-spin rounded-full border-4 border-solid border-blue-400 border-t-transparent"></div>
+                <div className="h-6 w-6 animate-spin rounded-full border-4 border-solid border-primary-800 border-t-transparent"></div>
                 <span>Processing...</span>
               </div>
             )}
-
-            {/* {loading ? (
-              <div className="flex items-center justify-center gap-2">
-                <div className="h-6 w-6 animate-spin rounded-full border-4 border-solid border-blue-400 border-t-transparent"></div>
-                <span>Processing...</span>
-              </div>
-            ) : (
-              url && (
-                <div className="pb-8 pt-4">
-                  <Image
-                    cloudName={import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}
-                    publicId={url}
-                  />
-                </div>
-              )
-            )} */}
-            {/* {imagePreview && (
-              <div className=" h-20 w-20 overflow-hidden rounded-md ">
-                <img src={imagePreview} className="block w-full " />
-              </div>
-            )} */}
+            {url && <p className="text-success">Upload Success</p>}
 
             <button type="submit" className="btn btn-primary  block w-full">
               OK

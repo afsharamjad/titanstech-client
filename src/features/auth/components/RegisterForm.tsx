@@ -74,7 +74,7 @@ function RegisterForm() {
         <button
           disabled={isPending}
           type="submit"
-          className="w-full rounded-md bg-primary-900 py-3 text-white shadow-md shadow-primary-500 disabled:bg-secondary-600"
+          className="btn btn-primary w-full disabled:bg-secondary-600"
         >
           {isPending ? "loading.." : "Register"}
         </button>

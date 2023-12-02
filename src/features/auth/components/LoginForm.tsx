@@ -60,7 +60,7 @@ function LoginForm() {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full rounded-md bg-primary-900 py-3 text-white shadow-md shadow-primary-500 disabled:bg-secondary-600"
+        className="btn btn-primary w-full disabled:bg-secondary-600"
       >
         {isPending ? "loading.." : "Login"}
       </button>
